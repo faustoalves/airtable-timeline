@@ -7,9 +7,6 @@ const ItemContainer = styled.div`
   width: 100%;
   height: ${CONFIG.ITEM_HEIGHT}px;
   background-color: #f0f0f0;
-  border-radius: 4px;
-  padding: 8px 12px;
-  box-sizing: border-box;
 `;
 const ItemContent = styled.div`
   padding: 8px 12px;
@@ -29,11 +26,14 @@ const ItemDates = styled.div`
   font-size: 11px;
 `;
 
-const TimelineItem = ({item, laneIndex}) => {
+const TimelineItem = ({item, laneIndex, position}) => {
   const nodeRef = useRef(null);
 
   return (
-    <ItemContainer style={{top: `${laneIndex * 80 + 10}px`}} ref={nodeRef}>
+    <ItemContainer
+      style={{top: `${laneIndex * 80 + 10}px`, left: `${position.left}px`, width: `${position.width}px`}}
+      ref={nodeRef}
+    >
       <ItemContent>
         <ItemName>
           {laneIndex}-{item.name}

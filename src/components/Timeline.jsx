@@ -4,6 +4,8 @@ import {CONFIG} from "../constants/constants";
 import TimelineHeader from "./TimelineHeader";
 import TimelineItem from "./TimelineItem";
 import assignLanes from "../assignLanes";
+import {useTimeline} from "../hooks/useTimeline";
+import {calculateItemPosition} from "../utils/timelineUtils";
 
 const TimelineContainer = styled.div`
   width: 100%;
@@ -16,6 +18,10 @@ const TimelineContainer = styled.div`
 
 const Timeline = ({items: initialItems}) => {
   const [items, setItems] = useState(initialItems);
+
+  const [containerWidth, setContainerWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+
+  const {pixelsPerDay, timelineWidth, dateRange} = useTimeline(items, containerWidth);
 
   const lanes = assignLanes(items);
 
@@ -34,7 +40,8 @@ const Timeline = ({items: initialItems}) => {
       <TimelineContainer>
         {lanes.map((lane, laneIndex) =>
           lane.map((item) => {
-            return <TimelineItem key={item.id} item={item} laneIndex={laneIndex} />;
+            const position = calculateItemPosition(item, dateRange.start, pixelsPerDay);
+            return <TimelineItem key={item.id} item={item} laneIndex={laneIndex} position={position} />;
           })
         )}
       </TimelineContainer>
