@@ -4,9 +4,13 @@ import {CONFIG} from "../constants/constants";
 
 const ItemContainer = styled.div`
   position: absolute;
-  width: 100%;
   height: ${CONFIG.ITEM_HEIGHT}px;
-  background-color: #f0f0f0;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `;
 const ItemContent = styled.div`
   padding: 8px 12px;

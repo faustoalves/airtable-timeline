@@ -16,6 +16,29 @@ const TimelineContainer = styled.div`
   flex-direction: column;
 `;
 
+const LanesContainer = styled.div`
+  position: relative;
+  background: ${CONFIG.COLORS.background};
+  width: 100%;
+  min-width: 100%;
+`;
+
+const LaneContainer = styled.div`
+  position: relative;
+  background: ${CONFIG.COLORS.background};
+  width: 100%;
+  min-width: 100%;
+`;
+
+const LaneBackground = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: ${CONFIG.LANE_HEIGHT}px;
+  background: ${(props) => (props.index % 2 === 0 ? CONFIG.COLORS.laneEven : CONFIG.COLORS.laneOdd)};
+  border-bottom: 1px solid ${CONFIG.COLORS.border};
+`;
+
 const Timeline = ({items: initialItems}) => {
   const [items, setItems] = useState(initialItems);
 
@@ -37,14 +60,21 @@ const Timeline = ({items: initialItems}) => {
   return (
     <div>
       <TimelineHeader />
-      <TimelineContainer>
-        {lanes.map((lane, laneIndex) =>
-          lane.map((item) => {
-            const position = calculateItemPosition(item, dateRange.start, pixelsPerDay);
-            return <TimelineItem key={item.id} item={item} laneIndex={laneIndex} position={position} />;
-          })
-        )}
-      </TimelineContainer>
+      <LanesContainer>
+        {/* Renderiza os fundos das lanes (linhas zebradas) */}
+        {lanes.map((_, index) => (
+          <LaneBackground key={index} index={index} style={{top: index * CONFIG.LANE_HEIGHT}} />
+        ))}
+
+        <TimelineContainer>
+          {lanes.map((lane, laneIndex) =>
+            lane.map((item) => {
+              const position = calculateItemPosition(item, dateRange.start, pixelsPerDay);
+              return <TimelineItem key={item.id} item={item} laneIndex={laneIndex} position={position} />;
+            })
+          )}
+        </TimelineContainer>
+      </LanesContainer>
     </div>
   );
 };
