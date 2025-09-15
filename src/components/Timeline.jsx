@@ -85,7 +85,6 @@ const Timeline = ({items: initialItems}) => {
     <div>
       <TimelineHeader />
       <LanesContainer style={{height: totalHeight}}>
-        {/* Renderiza os fundos das lanes (linhas zebradas) */}
         {lanes.map((_, index) => (
           <LaneBackground key={index} index={index} style={{top: index * CONFIG.LANE_HEIGHT}} />
         ))}

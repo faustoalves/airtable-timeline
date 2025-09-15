@@ -78,9 +78,7 @@ const TimelineItem = ({item, laneIndex, position, pixelsPerDay, onUpdateItem}) =
         ref={nodeRef}
       >
         <ItemContent>
-          <ItemName>
-            {laneIndex}-{item.name}
-          </ItemName>
+          <ItemName>{item.name}</ItemName>
           <ItemDates>
             {item.start} - {item.end}
           </ItemDates>
