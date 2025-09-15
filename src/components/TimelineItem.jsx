@@ -1,5 +1,6 @@
 import React, {useRef} from "react";
 import styled from "styled-components";
+import Draggable from "react-draggable";
 import {CONFIG} from "../constants/constants";
 
 const ItemContainer = styled.div`
@@ -45,23 +46,41 @@ const ItemDates = styled.div`
   text-overflow: ellipsis;
 `;
 
-const TimelineItem = ({item, laneIndex, position}) => {
+const TimelineItem = ({item, laneIndex, position, pixelsPerDay, onUpdateItem, isSelected, onSelect}) => {
   const nodeRef = useRef(null);
   const topPosition = laneIndex * CONFIG.LANE_HEIGHT + CONFIG.LANE_PADDING;
+
+  const handleDragStop = (e, data) => {
+    const newLeft = Math.max(0, data.x);
+    const daysMoved = Math.round(newLeft / pixelsPerDay) - Math.round(position.left / pixelsPerDay);
+
+    if (daysMoved !== 0) {
+      onUpdateItem(item.id, {daysMoved});
+    }
+  };
+
   return (
-    <ItemContainer
-      style={{top: `${topPosition}px`, left: `${position.left}px`, width: `${position.width}px`}}
-      ref={nodeRef}
+    <Draggable
+      key={`${item.id}-${position.left}`} // Key única para forçar re-render quando posição muda
+      nodeRef={nodeRef}
+      axis="x" // Só permite movimento horizontal
+      position={{x: position.left, y: 0}} // Posição controlada
+      onStop={handleDragStop} // Callback quando para de arrastar
     >
-      <ItemContent>
-        <ItemName>
-          {laneIndex}-{item.name}
-        </ItemName>
-        <ItemDates>
-          {item.start} - {item.end}
-        </ItemDates>
-      </ItemContent>
-    </ItemContainer>
+      <ItemContainer
+        style={{top: `${topPosition}px`, left: `${position.left}px`, width: `${position.width}px`}}
+        ref={nodeRef}
+      >
+        <ItemContent>
+          <ItemName>
+            {laneIndex}-{item.name}
+          </ItemName>
+          <ItemDates>
+            {item.start} - {item.end}
+          </ItemDates>
+        </ItemContent>
+      </ItemContainer>
+    </Draggable>
   );
 };
 

@@ -7,8 +7,10 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.23.12",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-draggable": "^4.5.0",
     "styled-components": "^6.1.19"
   },
   "devDependencies": {

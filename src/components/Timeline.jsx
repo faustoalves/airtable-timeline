@@ -6,6 +6,7 @@ import TimelineItem from "./TimelineItem";
 import assignLanes from "../assignLanes";
 import {useTimeline} from "../hooks/useTimeline";
 import {calculateItemPosition} from "../utils/timelineUtils";
+import {addDaysToDate} from "../utils/dateUtils";
 
 const TimelineContainer = styled.div`
   width: 100%;
@@ -41,12 +42,34 @@ const LaneBackground = styled.div`
 
 const Timeline = ({items: initialItems}) => {
   const [items, setItems] = useState(initialItems);
-
   const [containerWidth, setContainerWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
-
+  const [selectedItemId, setSelectedItemId] = useState(null);
   const {pixelsPerDay, timelineWidth, dateRange} = useTimeline(items, containerWidth);
 
   const lanes = assignLanes(items);
+
+  const handleUpdateItem = (itemId, updates) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === itemId) {
+          let updatedItem = {...item};
+
+          if (updates.daysMoved) {
+            const newStart = addDaysToDate(item.start, updates.daysMoved);
+            const newEnd = addDaysToDate(item.end, updates.daysMoved);
+            updatedItem = {...updatedItem, start: newStart, end: newEnd};
+          }
+
+          if (updates.name !== undefined) {
+            updatedItem = {...updatedItem, name: updates.name};
+          }
+
+          return updatedItem;
+        }
+        return item;
+      })
+    );
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -57,10 +80,12 @@ const Timeline = ({items: initialItems}) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const totalHeight = lanes.length * CONFIG.LANE_HEIGHT;
+
   return (
     <div>
       <TimelineHeader />
-      <LanesContainer>
+      <LanesContainer style={{height: totalHeight}}>
         {/* Renderiza os fundos das lanes (linhas zebradas) */}
         {lanes.map((_, index) => (
           <LaneBackground key={index} index={index} style={{top: index * CONFIG.LANE_HEIGHT}} />
@@ -70,7 +95,18 @@ const Timeline = ({items: initialItems}) => {
           {lanes.map((lane, laneIndex) =>
             lane.map((item) => {
               const position = calculateItemPosition(item, dateRange.start, pixelsPerDay);
-              return <TimelineItem key={item.id} item={item} laneIndex={laneIndex} position={position} />;
+              return (
+                <TimelineItem
+                  key={item.id}
+                  item={item}
+                  laneIndex={laneIndex}
+                  position={position}
+                  pixelsPerDay={pixelsPerDay}
+                  onUpdateItem={handleUpdateItem}
+                  isSelected={selectedItemId === item.id}
+                  onSelect={setSelectedItemId}
+                />
+              );
             })
           )}
         </TimelineContainer>

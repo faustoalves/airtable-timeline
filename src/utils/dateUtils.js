@@ -1,4 +1,4 @@
-import {parseISO, differenceInDays} from "date-fns";
+import {parseISO, differenceInDays, addDays, subDays, format} from "date-fns";
 
 const parseDate = (dateString) => parseISO(dateString);
 
@@ -17,4 +17,18 @@ export const getDateRange = (items) => {
 
 export const getDaysFromStart = (startDate, currentDate) => {
   return differenceInDays(parseDate(currentDate), parseDate(startDate));
+};
+
+export const addDaysToDate = (dateString, days) => {
+  const date = parseDate(dateString);
+  return format(addDays(date, days), "yyyy-MM-dd");
+};
+
+export const subtractDaysFromDate = (dateString, days) => {
+  const date = parseDate(dateString);
+  return format(subDays(date, days), "yyyy-MM-dd");
+};
+
+export const formatDate = (dateString, formatStr = "MMM dd, yyyy") => {
+  return format(parseDate(dateString), formatStr);
 };
