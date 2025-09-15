@@ -2,6 +2,7 @@ import React, {useRef} from "react";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 import {CONFIG} from "../constants/constants";
+import {motion} from "framer-motion"; // Para animações suaves
 
 const ItemContainer = styled.div`
   position: absolute;
@@ -9,15 +10,20 @@ const ItemContainer = styled.div`
   user-select: none;
   box-shadow: ${CONFIG.COLORS.shadow};
   border-radius: ${CONFIG.ITEM_BORDER}px;
+  cursor: grab;
   color: ${CONFIG.COLORS.primary};
   background-color: ${CONFIG.COLORS.background};
 
   &:hover {
-    background-color: #027381;
+    background: ${CONFIG.COLORS.primary};
     box-shadow: ${CONFIG.COLORS.shadow};
     color: ${CONFIG.COLORS.background};
     z-index: 10;
     transform: translateY(-2px);
+  }
+
+  &:active {
+    cursor: grabbing;
   }
 `;
 const ItemContent = styled.div`
@@ -46,7 +52,7 @@ const ItemDates = styled.div`
   text-overflow: ellipsis;
 `;
 
-const TimelineItem = ({item, laneIndex, position, pixelsPerDay, onUpdateItem, isSelected, onSelect}) => {
+const TimelineItem = ({item, laneIndex, position, pixelsPerDay, onUpdateItem}) => {
   const nodeRef = useRef(null);
   const topPosition = laneIndex * CONFIG.LANE_HEIGHT + CONFIG.LANE_PADDING;
 

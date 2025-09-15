@@ -43,7 +43,6 @@ const LaneBackground = styled.div`
 const Timeline = ({items: initialItems}) => {
   const [items, setItems] = useState(initialItems);
   const [containerWidth, setContainerWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
-  const [selectedItemId, setSelectedItemId] = useState(null);
   const {pixelsPerDay, timelineWidth, dateRange} = useTimeline(items, containerWidth);
 
   const lanes = assignLanes(items);
@@ -103,8 +102,6 @@ const Timeline = ({items: initialItems}) => {
                   position={position}
                   pixelsPerDay={pixelsPerDay}
                   onUpdateItem={handleUpdateItem}
-                  isSelected={selectedItemId === item.id}
-                  onSelect={setSelectedItemId}
                 />
               );
             })
