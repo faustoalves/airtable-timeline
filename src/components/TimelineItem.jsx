@@ -2,7 +2,6 @@ import React, {useRef} from "react";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 import {CONFIG} from "../constants/constants";
-import {motion} from "framer-motion"; // Para animações suaves
 
 const ItemContainer = styled.div`
   position: absolute;
